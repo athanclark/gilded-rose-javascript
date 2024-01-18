@@ -40,6 +40,31 @@ describe("updateQuality", () => {
 
         expect(old_value).toBeLessThanOrEqual(new_value);
     });
+
+    it("backstage passes increase then drop", () => {
+        const tix = new Item("Backstage passes to a TAFKAL80ETC concert", 15, 10);
+        items.push(tix);
+        for (let i = 5; i > 0; i--) {
+            updateQuality();
+        }
+        expect(tix.sellIn).toBe(10);
+        for (let i = 5; i > 0; i--) {
+            let old_value = tix.quality;
+            updateQuality();
+            let new_value = tix.quality;
+            expect(new_value).toBe(old_value + 2);
+        }
+        for (let i = 5; i > 0; i--) {
+            let old_value = tix.quality;
+            updateQuality();
+            let new_value = tix.quality;
+            expect(new_value).toBe(old_value + 3);
+        }
+
+        updateQuality();
+
+        expect(tix.quality).toBe(0);
+    });
 });
 
 function quality_never_negative() {
