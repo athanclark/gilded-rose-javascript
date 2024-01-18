@@ -1,5 +1,13 @@
 import { expect, describe, it } from "vitest";
-import { Item, items, updateQuality } from "./gilded-rose.js";
+import {
+    Item,
+    items,
+    updateQuality,
+    Cheese,
+    Legendary,
+    ConcertTickets,
+    Conjured
+} from "./gilded-rose.js";
 
 describe("updateQuality", () => {
     it("never has a quality less than 0", () => {
@@ -33,7 +41,10 @@ describe("updateQuality", () => {
     });
 
     it("increases quality of aged brie over time", () => {
-        const aged_brie = items.filter(i => i.name == "Aged Brie")[0];
+        // const aged_brie = items.filter(i => i.name == "Aged Brie")[0];
+        const aged_brie = new Cheese("Aged Brie", 15, 20);
+        items.push(aged_brie);
+
         const old_value = aged_brie.quality;
         updateQuality();
         const new_value = aged_brie.quality;
@@ -42,7 +53,7 @@ describe("updateQuality", () => {
     });
 
     it("backstage passes increase then drop", () => {
-        const tix = new Item("Backstage passes to a TAFKAL80ETC concert", 15, 10);
+        const tix = new ConcertTickets("Backstage passes to a TAFKAL80ETC concert", 15, 10);
         items.push(tix);
         for (let i = 5; i > 0; i--) {
             updateQuality();
@@ -64,6 +75,17 @@ describe("updateQuality", () => {
         updateQuality();
 
         expect(tix.quality).toBe(0);
+    });
+
+    it("conjured items degrade twice as fast", () => {
+        const item = new Conjured("Conjured Mana Cake", 15, 10);
+        items.push(item);
+
+        const old_value = item.quality;
+        updateQuality();
+        const new_value = item.quality;
+
+        expect(new_value).toBe(old_value - 2);
     });
 });
 
