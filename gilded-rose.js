@@ -1,4 +1,6 @@
 export class Item {
+    change_in_quality_per_day = -1;
+
     constructor(name, sellIn, quality) {
         this.name = name;
         this.sellIn = sellIn; //# of days we have to sell item
@@ -9,7 +11,7 @@ export class Item {
         this.sellIn = Math.max(this.sellIn - 1, 0);
         this.quality = Math.min(
             Math.max(
-                this.quality - 1,
+                this.quality + this.change_in_quality_per_day,
                 0
             ),
             50
@@ -18,38 +20,29 @@ export class Item {
 }
 
 export class Conjured extends Item {
-    age() {
-        this.quality--;
-        super.age();
-    }
+    change_in_quality_per_day = -2;
 }
 
 export class Cheese extends Item {
-    age() {
-        this.quality++;
-        this.quality++;
-        super.age();
-    }
+    change_in_quality_per_day = 1;
 }
 
 export class ConcertTickets extends Item {
     age() {
-        if (this.sellIn <= 10) {
-            this.quality++;
-            this.quality++;
-            this.quality++;
-            if (this.sellIn <= 5) {
-                this.quality++;
-                if (this.sellIn === 0) {
-                    this.quality = 0;
-                }
-            }
+        if (this.sellIn === 0) {
+            this.change_in_quality_per_day = 0;
+            this.quality = 0;
+        } else if (this.sellIn <= 5) {
+            this.change_in_quality_per_day = 3;
+        } else if (this.sellIn <= 10) {
+            this.change_in_quality_per_day = 2;
         }
         super.age();
     }
 }
 
 export class Legendary extends Item {
+    change_in_quality_per_day = 0;
     age() {
         super.age();
         this.quality = 80;
